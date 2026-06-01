@@ -26,19 +26,18 @@ jobs:
         run: ctest --test-dir build --output-on-failure -V
 
   arm64-cross-compile:
-    name: ARM64 cross-compile
+    name: ARM64 cross-compile (controller headers)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install cross-compiler + libmodbus
+      - name: Install cross-compiler
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
-            gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake make pkg-config \
-            libmodbus-dev
+            gcc-aarch64-linux-gnu g++-aarch64-linux-gnu cmake make
 
-      - name: Cross-compile solar_controller (tests off)
+      - name: Cross-compile test_controller for ARM64
         run: |
           cmake -B build-arm64 \
                 -DCMAKE_BUILD_TYPE=Release \
@@ -46,9 +45,8 @@ jobs:
                 -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc \
                 -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++ \
                 -DCMAKE_SYSTEM_NAME=Linux \
-                -DCMAKE_SYSTEM_PROCESSOR=aarch64 \
-                -DBUILD_TESTING=OFF
-          cmake --build build-arm64 --target solar_controller -j$(nproc)
+                -DCMAKE_SYSTEM_PROCESSOR=aarch64
+          cmake --build build-arm64 --target test_controller -j$(nproc)
 
   python-test:
     name: Python 25 pytest (geometry + DAQ + modbus sim)

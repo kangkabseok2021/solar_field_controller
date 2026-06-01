@@ -48,7 +48,7 @@ int main() {
 
     // Shared memory (target angle from Python sun-position engine)
     int shm_fd = shm_open(kShmName, O_CREAT | O_RDWR, 0600);
-    ftruncate(shm_fd, sizeof(ShmTarget));
+    if (ftruncate(shm_fd, sizeof(ShmTarget)) < 0) { perror("ftruncate"); return 1; }
     auto* shm = static_cast<ShmTarget*>(
         mmap(nullptr, sizeof(ShmTarget), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0));
     shm->target_angle  = 0.0f;
