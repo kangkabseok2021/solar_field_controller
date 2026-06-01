@@ -1,0 +1,9 @@
+build/
+build-arm64/
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+logs/
+*.png
+.DS_Store
